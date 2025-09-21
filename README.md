@@ -1,4 +1,4 @@
-# Thư viện số - Skeleton
+# Thư viện số - Digital Library System
 
 This workspace contains a scaffold for a digital library:
 
