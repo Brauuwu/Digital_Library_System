@@ -1,0 +1,78 @@
+-- Create database and tables (compatible with the provided schema)
+CREATE DATABASE IF NOT EXISTS ThuVienSo
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE ThuVienSo;
+
+-- tables
+CREATE TABLE IF NOT EXISTS NguoiDung (
+  ID_NguoiDung INT AUTO_INCREMENT PRIMARY KEY,
+  HoTen VARCHAR(100) NOT NULL,
+  Email VARCHAR(100) UNIQUE,
+  SoDienThoai VARCHAR(20),
+  DiaChi VARCHAR(200),
+  Password VARCHAR(200) NOT NULL,
+  Role ENUM('user','admin') DEFAULT 'user'
+);
+
+CREATE TABLE IF NOT EXISTS NhaXuatBan (
+  ID_NXB INT AUTO_INCREMENT PRIMARY KEY,
+  TenNXB VARCHAR(100) NOT NULL,
+  DiaChi VARCHAR(200),
+  Website VARCHAR(200)
+);
+
+CREATE TABLE IF NOT EXISTS Sach (
+  ID_Sach INT AUTO_INCREMENT PRIMARY KEY,
+  ID_NXB INT,
+  ISBN VARCHAR(30) UNIQUE,
+  TieuDeSach VARCHAR(200) NOT NULL,
+  NamXuatBan YEAR,
+  SoLuongCon INT DEFAULT 0,
+  FOREIGN KEY (ID_NXB) REFERENCES NhaXuatBan(ID_NXB)
+);
+
+CREATE TABLE IF NOT EXISTS TacGia (
+  ID_TacGia INT AUTO_INCREMENT PRIMARY KEY,
+  TenTacGia VARCHAR(100) NOT NULL,
+  TieuSu TEXT
+);
+
+CREATE TABLE IF NOT EXISTS TheLoai (
+  ID_TheLoai INT AUTO_INCREMENT PRIMARY KEY,
+  TenTheLoai VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS TacGia_Sach (
+  ID_TacGia INT,
+  ID_Sach INT,
+  PRIMARY KEY (ID_TacGia, ID_Sach),
+  FOREIGN KEY (ID_TacGia) REFERENCES TacGia(ID_TacGia),
+  FOREIGN KEY (ID_Sach) REFERENCES Sach(ID_Sach)
+);
+
+CREATE TABLE IF NOT EXISTS TheLoai_Sach (
+  ID_TheLoai INT,
+  ID_Sach INT,
+  PRIMARY KEY (ID_TheLoai, ID_Sach),
+  FOREIGN KEY (ID_TheLoai) REFERENCES TheLoai(ID_TheLoai),
+  FOREIGN KEY (ID_Sach) REFERENCES Sach(ID_Sach)
+);
+
+CREATE TABLE IF NOT EXISTS PhieuMuon (
+  ID_PhieuMuon INT AUTO_INCREMENT PRIMARY KEY,
+  ID_NguoiDung INT,
+  NgayMuon DATE NOT NULL,
+  HanTra DATE NOT NULL,
+  TrangThai VARCHAR(50),
+  FOREIGN KEY (ID_NguoiDung) REFERENCES NguoiDung(ID_NguoiDung)
+);
+
+CREATE TABLE IF NOT EXISTS ChiTietPhieuMuon (
+  ID_PhieuMuon INT,
+  ID_Sach INT,
+  PRIMARY KEY (ID_PhieuMuon, ID_Sach),
+  FOREIGN KEY (ID_PhieuMuon) REFERENCES PhieuMuon(ID_PhieuMuon),
+  FOREIGN KEY (ID_Sach) REFERENCES Sach(ID_Sach)
+);
